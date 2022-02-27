@@ -22,7 +22,12 @@ function getStudentsByName(records) {
     return students;
   }
 }
-
+function getStudentsByID(records) {
+  var orignalRecords = [...records];
+  var sortedStudents = sortStudentsByID();
+  students = orignalRecords;
+  return sortedStudents;
+}
 function sortStudentsByID() {
   // Don't modify this function
   students.sort(function byID(s1, s2) {
@@ -32,11 +37,6 @@ function sortStudentsByID() {
 }
 
 // *************************************
-
-// modify/move this function
-function getStudentsByID() {
-  return students;
-}
 
 // *************************************
 

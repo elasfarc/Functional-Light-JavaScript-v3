@@ -1,7 +1,7 @@
 const R = require("ramda");
 
 // console.log(add2(R.always(5), R.always(7)));
-console.log(add2(always(5), always(7)));
+//console.log(add2(always(5), always(7)));
 console.log(addn([always(5), always(7), always(12), always(6), always(5)]));
 console.log(addn([always(5), always(7), always(12)]));
 
@@ -30,6 +30,15 @@ function addn(fns) {
   }
 }
 
+function addn(fns) {
+  fns = [...fns];
+  while (fns.length > 2) {
+    let [f1, f2, ...rest] = fns;
+    fns = [() => add2(f1, f2), ...rest];
+  }
+  return add2(fns[0], fns[1]);
+}
+
 function always(v) {
   return function () {
     return v;
@@ -43,5 +52,6 @@ function add(y) {
 }
 
 function add2(f2, f1) {
+  //console.log("______", f2(), f1());
   return add(f2())(f1());
 }

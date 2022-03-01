@@ -22,6 +22,14 @@ function addn(fns, cont = R.identity) {
   )(fns);
 }
 
+function addn(fns) {
+  return R.compose(R.call, R.bind(fns.reduce, fns))(reducer);
+  //***/
+  function reducer(resultFn, fn) {
+    return () => add2(resultFn, fn);
+  }
+}
+
 function always(v) {
   return function () {
     return v;

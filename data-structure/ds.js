@@ -39,7 +39,13 @@ function mapObj(mapperFn, o) {
 }
 
 function filterObj(predicateFn, o) {
-  // TODO
+  return R.compose(R.reduce(setObjPairOnPred, {}), R.toPairs)(o);
+  //****/
+  function setObjPairOnPred(obj, [key, value]) {
+    return R.defaultTo(obj)(
+      R.cond([[predicateFn, R.assoc(key, R.__, obj)]])(value)
+    );
+  }
 }
 
 function reduceObj(reducerFn, initialValue, o) {

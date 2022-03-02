@@ -1,11 +1,32 @@
 const R = require("ramda");
 
-// console.log(add2(R.always(5), R.always(7)));
-//console.log(add2(always(5), always(7)));
 console.log(addn([always(5), always(7), always(12), always(6), always(5)]));
 console.log(addn([always(5), always(7), always(12)]));
 
+// #6, #7 && #8
+var numbers = [5, 2, 1, 5, 4, 2, 7, 9, 17, 6, 3, 2, 4, 8, 10, 5, 12, 13];
+console.log(
+  R.compose(
+    R.curryN(2, R.call)(addn),
+    R.map(R.always),
+    R.reduce(uniqueEvenNums, [])
+  )(numbers)
+);
+
 //****/
+function uniqueEvenNums(arr, num) {
+  return R.defaultTo([...arr])(
+    R.cond([
+      [
+        R.both(
+          R.compose(R.equals(0), R.modulo(R.__, 2)),
+          R.compose(R.not, R.includes(R.__, arr))
+        ),
+        R.append(R.__, arr),
+      ],
+    ])(num)
+  );
+}
 function addn(fns, cont = R.identity) {
   fns = [...fns];
   var [f1, f2] = fns;
@@ -52,6 +73,5 @@ function add(y) {
 }
 
 function add2(f2, f1) {
-  //console.log("______", f2(), f1());
   return add(f2())(f1());
 }

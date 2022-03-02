@@ -58,6 +58,35 @@ function reduceObj(reducer, init, o) {
   return acc;
 }
 
+//reduceObj (recursive)
+function reduceObj(reducer, init, o) {
+  return R.compose(R.curryN(3, bigFn)(reducer, R.always(init)), R.values)(o);
+}
+
+//naive
+function bigFn(fn, accFn, [v1, ...rest]) {
+  if (rest.length == 0) return fn(accFn(), v1);
+  return bigFn(
+    fn,
+    function f() {
+      return fn(accFn(), v1);
+    },
+    rest
+  );
+}
+// using Ramda
+function bigFn(fn, accFn, [v1, ...rest]) {
+  var callFnWith = R.compose(R.curryN(2, fn)(R.__, v1), R.call);
+  return R.defaultTo(callFnWith(accFn))(
+    R.cond([
+      [
+        R.gt(R.__, 0),
+        R.curryN(4, R.call)(bigFn, fn, R.always(R.call(fn, accFn(), v1))),
+      ],
+    ])(rest)
+  );
+}
+
 // ************************************
 
 function curry(arity, fn) {

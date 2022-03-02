@@ -75,3 +75,5 @@ function add(y) {
 function add2(f2, f1) {
   return add(f2())(f1());
 }
+
+module.exports = { addn };

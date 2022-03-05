@@ -10,24 +10,27 @@ var nums = {
   third: [1, 1, 3, 2],
 };
 
-var filteredNums = filterObj(function (list) {
-  return isOdd(listSum(list));
-}, nums);
+// var filteredNums = filterObj(R.compose(isOdd, listSum), nums);
 
-var filteredNumsProducts = mapObj(function (list) {
-  return listProduct(list);
-}, filteredNums);
+// var filteredNumsProducts = mapObj(listProduct, filteredNums);
 
-console.log(
-  reduceObj(
-    function (acc, v) {
-      return acc + v;
-    },
-    0,
-    filteredNumsProducts
-  )
-);
+// console.log(reduceObj(sum, 0, filteredNumsProducts));
 // 38886
+
+// console.log(
+//   R.compose(
+//     R.curryN(3, reduceObj)(sum, 0),
+//     R.curryN(2, mapObj)(listProduct),
+//     R.curryN(2, filterObj)(R.compose(isOdd, listSum))
+//   )(nums)
+// );
+console.log(
+  R.reduce(R.binary(R.compose), R.identity, [
+    R.curryN(3, reduceObj)(sum, 0),
+    R.curryN(2, mapObj)(listProduct),
+    R.curryN(2, filterObj)(R.compose(isOdd, listSum)),
+  ])(nums)
+);
 
 // ************************************
 
